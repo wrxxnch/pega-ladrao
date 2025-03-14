@@ -23,11 +23,17 @@
         <button type="button" class="btn btn-success btn-lg">Criptografar 🥷</button>
     </div>
     <br>
+    <Ads />
+    <br>
     <div class="mb-3">
-        <label for="msgEnc" class="form-label">Resultado</label>
+        <h2>Resultado</h2>
         <textarea class="form-control" id="msgEnc" rows="5" readonly></textarea>
     </div>
     <div class="mb-3 text-center">
         <button type="button" class="btn btn-info btn-lg">Copiar</button>
     </div>
 </template>
+
+<script setup>
+import Ads from '../components/Ads.vue'
+</script>
