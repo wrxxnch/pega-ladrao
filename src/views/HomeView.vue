@@ -44,6 +44,8 @@ import sha256 from 'crypto-js/sha256';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import Base64 from 'crypto-js/enc-base64';
 import { Device } from '@capacitor/device';
+import { doc, setDoc } from 'firebase/firestore';
+import { firestore } from '../firebase';
 
 const data = reactive({
     msgBruta: '',
@@ -82,7 +84,14 @@ async function encode() {
         console.error('Error device info:', error);
     }
 
-    console.log(payload);
+    // console.log(payload);
+    Object.keys(payload).forEach(key => payload[key] === undefined && delete payload[key])
+
+    try {
+        await setDoc(doc(firestore, "encryptions", Date.now().toString()), payload);
+    } catch (error) {
+        console.error('Error insert payload:', error);
+    }
 
     data.result = hmacDigest;
     appStore.loadingToggle();
