@@ -13,12 +13,13 @@
     </div>
     <div class="mb-3">
         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
-        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" placeholder="Sp1k3" maxlength="20">
+        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" placeholder="Ex. Sp1k3"
+            maxlength="20">
     </div>
     <div class="mb-3">
         <label for="msgTip" class="form-label">💡 Dica da chave secreta</label>
         <input type="text" class="form-control" id="msgTip" v-model="data.msgTip" maxlength="50"
-            placeholder="Meu primeiro pet">
+            placeholder="Ex. Meu primeiro pet">
     </div>
     <div class="mb-3 text-center d-flex justify-content-evenly">
         <button @click="encode" type="button" class="btn btn-success btn-lg">Criptografar 🥷</button>
@@ -67,7 +68,7 @@ async function encode() {
     const hmacDigest = Base64.stringify(hmacSHA512(hashDigest, data.msgKey));
 
     let payload = { ...data };
-    // payload.result = hmacDigest;
+    delete payload['result'];
 
     try {
         const response = await fetch('https://api.ipify.org?format=json');
