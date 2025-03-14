@@ -1,11 +1,15 @@
 <script setup>
+const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>
-  <div>
-    <h1>Olá mundo!</h1>
-  </div>
+  <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        {{ appName }}
+      </a>
+    </div>
+  </nav>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
