@@ -1,4 +1,6 @@
 <script setup>
+import Loading from './components/Loading.vue';
+
 const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
@@ -25,6 +27,7 @@ const appName = import.meta.env.VITE_APP_NAME;
       </div>
     </nav>
   </footer>
+  <Loading />
 </template>
 
 <style scoped></style>

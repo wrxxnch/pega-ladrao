@@ -30,10 +30,17 @@
         <textarea class="form-control" id="msgEnc" rows="5" readonly></textarea>
     </div>
     <div class="mb-3 text-center">
-        <button type="button" class="btn btn-info btn-lg">Copiar</button>
+        <button @click="loading" type="button" class="btn btn-info btn-lg">Copiar</button>
     </div>
 </template>
 
 <script setup>
-import Ads from '../components/Ads.vue'
+import Ads from '../components/Ads.vue';
+import { useAppStore } from '../store';
+
+const appStore = useAppStore();
+
+function loading(){
+    appStore.loadingToggle();
+}
 </script>
