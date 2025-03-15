@@ -8,12 +8,19 @@
         </div>
     </div>
     <div class="mb-3">
+        <div class="alert alert-success" role="alert">
+            Clique no botão abaixo para <b>DESCRIPTOGRAFAR</b> uma mensagem.<br><br>
+            <Descriptografador />
+        </div>
+    </div>
+    <h2>Criptografar Mensagem</h2>
+    <div class="mb-3">
         <label for="msgBruta" class="form-label">📜 Digite aqui sua mensagem ou texto</label>
         <textarea class="form-control" id="msgBruta" rows="5" v-model="data.msgBruta"></textarea>
     </div>
     <div class="mb-3">
         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
-        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" placeholder="Ex. Sp1k3"
+        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" placeholder="Ex. Caramelo"
             maxlength="20">
     </div>
     <div class="mb-3">
@@ -22,8 +29,8 @@
             placeholder="Ex. Meu primeiro pet">
     </div>
     <div class="mb-3 text-center d-flex justify-content-evenly">
-        <button @click="encode" type="button" class="btn btn-success btn-lg">Criptografar 🥷</button>
-        <button @click="clear" type="button" class="btn btn-warning btn-lg">Limpar 🥷</button>
+        <button @click="encode" type="button" class="btn btn-success btn-lg">Criptografar 🔐</button>
+        <button @click="clear" type="button" class="btn btn-warning btn-lg">Limpar 🧹</button>
     </div>
     <br>
     <Ads />
@@ -32,21 +39,21 @@
         <h2>Resultado</h2>
         <textarea class="form-control" id="msgEnc" rows="5" v-model="data.result" readonly></textarea>
     </div>
-    <div class="mb-3 text-center">
-        <button @click="copy" type="button" class="btn btn-info btn-lg">Copiar</button>
+    <div class="mb-3 text-center d-flex justify-content-evenly">
+        <button :disabled="data.result.length == 0 ? true : false" @click="copy" type="button"
+            class="btn btn-info btn-lg">Copiar 📋</button>
     </div>
 </template>
 
 <script setup>
+import Descriptografador from '../components/Descriptografador.vue';
 import { reactive } from 'vue';
 import Ads from '../components/Ads.vue';
 import { useAppStore } from '../store';
-import sha256 from 'crypto-js/sha256';
-import hmacSHA512 from 'crypto-js/hmac-sha512';
-import Base64 from 'crypto-js/enc-base64';
 import { Device } from '@capacitor/device';
 import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
+import * as CryptoJS from 'crypto-js';
 
 const data = reactive({
     msgBruta: '',
@@ -58,14 +65,14 @@ const data = reactive({
 const appStore = useAppStore();
 
 async function encode() {
-    if (data.msgBruta.length == 0 || data.msgKey == 0 || data.msgTip == 0) {
+    if (data.msgBruta == false || data.msgKey == false || data.msgTip == false) {
         alert('Todos os campos devem ser preenchidos!');
         return;
     }
 
     appStore.loadingToggle();
-    const hashDigest = sha256(data.msgBruta);
-    const hmacDigest = Base64.stringify(hmacSHA512(hashDigest, data.msgKey));
+
+    const encrypted = CryptoJS.AES.encrypt(data.msgBruta, data.msgKey).toString();
 
     let payload = { ...data };
     delete payload['result'];
@@ -94,7 +101,7 @@ async function encode() {
         console.error('Error insert payload:', error);
     }
 
-    data.result = hmacDigest;
+    data.result = encrypted;
     appStore.loadingToggle();
     location.href = '#msgEnc';
 }
@@ -111,3 +118,5 @@ function copy() {
     alert('Texto copiado para a área de transferência.');
 }
 </script>
+
+<style scoped></style>
