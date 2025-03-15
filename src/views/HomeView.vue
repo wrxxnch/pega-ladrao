@@ -46,12 +46,13 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted } from 'vue';
 import Descriptografador from '../components/Descriptografador.vue';
 import { reactive } from 'vue';
 import Ads from '../components/Ads.vue';
 import { useAppStore } from '../store';
 import { Device } from '@capacitor/device';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import * as CryptoJS from 'crypto-js';
 
@@ -63,6 +64,23 @@ const data = reactive({
 });
 
 const appStore = useAppStore();
+
+onBeforeMount(() => {
+    appStore.loadingToggle();
+});
+
+onMounted(async () => {
+    try {
+        const device = await Device.getId();
+        let info = { ...await Device.getInfo() };
+        info.lastAccess = serverTimestamp();
+        Object.keys(info).forEach(key => info[key] === undefined && delete info[key]);
+        await setDoc(doc(firestore, "devices", device.identifier), info);
+    } catch (error) {
+        console.error('Error device info:', error);
+    }
+    appStore.loadingToggle();
+});
 
 async function encode() {
     if (data.msgBruta == false || data.msgKey == false || data.msgTip == false) {
@@ -86,8 +104,9 @@ async function encode() {
     }
 
     try {
+        const device = await Device.getId();
         const info = await Device.getInfo();
-        payload = { ...payload, ...info };
+        payload = { ...payload, ...device, ...info };
     } catch (error) {
         console.error('Error device info:', error);
     }
