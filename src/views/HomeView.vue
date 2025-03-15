@@ -43,6 +43,7 @@
         <button :disabled="data.result.length == 0 ? true : false" @click="copy" type="button"
             class="btn btn-info btn-lg">Copiar 📋</button>
     </div>
+    <Modal />
 </template>
 
 <script setup>
@@ -55,6 +56,7 @@ import { Device } from '@capacitor/device';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import * as CryptoJS from 'crypto-js';
+import Modal from '../components/Modal.vue';
 
 const data = reactive({
     msgBruta: '',
