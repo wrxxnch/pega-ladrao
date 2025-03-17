@@ -8,15 +8,12 @@
         </div>
     </div>
     <div class="mb-3">
-        <div class="alert alert-success" role="alert">
-            Clique no botão abaixo para <b>DESCRIPTOGRAFAR</b> uma mensagem.<br><br>
-            <Descriptografador />
-        </div>
+        <Descriptografador />
     </div>
     <h2>Criptografar Mensagem</h2>
     <div class="mb-3">
         <label for="msgBruta" class="form-label">📜 Digite aqui sua mensagem ou texto</label>
-        <textarea class="form-control" id="msgBruta" rows="5" v-model="data.msgBruta"></textarea>
+        <textarea class="form-control font-monospace" id="msgBruta" rows="5" v-model="data.msgBruta"></textarea>
     </div>
     <div class="mb-3">
         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
@@ -34,16 +31,15 @@
     </div>
     <br>
     <Ads />
-    <br>
     <div class="mb-3">
         <h2>Resultado</h2>
-        <textarea class="form-control" id="msgEnc" rows="5" v-model="data.result" readonly></textarea>
+        <textarea class="form-control font-monospace" id="msgEnc" rows="5" v-model="data.result" readonly></textarea>
     </div>
     <div class="mb-3 text-center d-flex justify-content-evenly">
         <button :disabled="data.result.length == 0 ? true : false" @click="copy" type="button"
             class="btn btn-info btn-lg">Copiar 📋</button>
     </div>
-    <Modal />
+    <HandleModal />
 </template>
 
 <script setup>
@@ -56,7 +52,7 @@ import { Device } from '@capacitor/device';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import * as CryptoJS from 'crypto-js';
-import Modal from '../components/Modal.vue';
+import HandleModal from '../components/HandleModal.vue';
 
 const data = reactive({
     msgBruta: '',

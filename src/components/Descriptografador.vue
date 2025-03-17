@@ -1,10 +1,10 @@
 <template>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#decodeModel">
-        Descriptografar Mensagem 🔓
-    </button>
-
-    <!-- Modal -->
+    <div class="alert alert-success" role="alert">
+        Clique no botão abaixo para <b>DESCRIPTOGRAFAR</b> uma mensagem.<br><br>
+        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#decodeModel">
+            Descriptografar Mensagem 🔓
+        </button>
+    </div>
     <div class="modal fade" id="decodeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="decodeModelLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -21,7 +21,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="msgEncoded" class="form-label">📜 Digite aqui sua mensagem criptografada</label>
-                        <textarea class="form-control" id="msgEncoded" rows="5" v-model="data.msgEncoded"></textarea>
+                        <textarea class="form-control font-monospace" id="msgEncoded" rows="5"
+                            v-model="data.msgEncoded"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
@@ -33,10 +34,10 @@
                     </div>
                     <br>
                     <Ads />
-                    <br>
                     <div class="mb-3">
                         <h2>Mensagem</h2>
-                        <textarea class="form-control" id="msgEnc" rows="5" v-model="data.result" readonly></textarea>
+                        <textarea class="form-control font-monospace" id="msgEnc" rows="5" v-model="data.result"
+                            readonly></textarea>
                     </div>
                     <div class="mb-3 text-center d-flex justify-content-evenly">
                         <button :disabled="data.result.length == 0 ? true : false" @click="copy" type="button"
