@@ -16,7 +16,7 @@ const imgSrc = computed(() => {
 
 <style scoped>
 .ads {
-    max-width: 75%;
+    /* max-width: 75%; */
     border: 1px solid black
 }
 </style>

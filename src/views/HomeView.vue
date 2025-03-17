@@ -25,19 +25,23 @@
         <input type="text" class="form-control" id="msgTip" v-model="data.msgTip" maxlength="50"
             placeholder="Ex. Meu primeiro pet">
     </div>
-    <div class="mb-3 text-center d-flex justify-content-evenly">
+    <div class="mb-3 text-center d-flex justify-content-between">
         <button @click="encode" type="button" class="btn btn-success btn-lg">Criptografar 🔐</button>
         <button @click="clear" type="button" class="btn btn-warning btn-lg">Limpar 🧹</button>
     </div>
     <br>
     <Ads />
-    <div class="mb-3">
-        <h2>Resultado</h2>
-        <textarea class="form-control font-monospace" id="msgEnc" rows="5" v-model="data.result" readonly></textarea>
-    </div>
-    <div class="mb-3 text-center d-flex justify-content-evenly">
-        <button :disabled="data.result.length == 0 ? true : false" @click="copy" type="button"
-            class="btn btn-info btn-lg">Copiar 📋</button>
+    <h2>Resultado</h2>
+    <div class="card text-center mb-3">
+        <div class="card-body">
+            <p class="card-text overflow-auto text-break font-monospace mb-3" style="max-height: 200px;">
+                {{ data.result || '...' }}
+            </p>
+            <hr>
+            <button :disabled="data.result.length == 0 ? true : false" @click="copy" class="btn btn-primary btn-lg">
+                Copiar 📋
+            </button>
+        </div>
     </div>
     <HandleModal />
 </template>
@@ -120,7 +124,6 @@ async function encode() {
 
     data.result = encrypted;
     appStore.loadingToggle();
-    location.href = '#msgEnc';
 }
 
 function clear() {

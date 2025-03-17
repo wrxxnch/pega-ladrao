@@ -28,7 +28,7 @@
                         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
                         <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" maxlength="20">
                     </div>
-                    <div class="mb-3 text-center d-flex justify-content-evenly">
+                    <div class="mb-3 text-center d-flex justify-content-between">
                         <button @click="decode" type="button" class="btn btn-success">Descriptografar 🔓</button>
                         <button @click="clear" type="button" class="btn btn-warning">Limpar 🧹</button>
                     </div>
@@ -36,13 +36,24 @@
                     <Ads />
                     <div class="mb-3">
                         <h2>Mensagem</h2>
-                        <textarea class="form-control font-monospace" id="msgEnc" rows="5" v-model="data.result"
-                            readonly></textarea>
-                    </div>
-                    <div class="mb-3 text-center d-flex justify-content-evenly">
-                        <button :disabled="data.result.length == 0 ? true : false" @click="copy" type="button"
-                            class="btn btn-info">Copiar 📋</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar ❌</button>
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <p class="card-text overflow-auto text-break font-monospace mb-3"
+                                    style="max-height: 200px;">
+                                    {{ data.result || '...' }}
+                                </p>
+                                <hr>
+                                <div class="mb-3 text-center d-flex justify-content-between">
+                                    <button :disabled="data.result.length == 0 ? true : false" @click="copy"
+                                        type="button" class="btn btn-info">
+                                        Copiar 📋
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                                        Fechar ❌
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,7 +105,7 @@ async function decode() {
         str = decrypted.toString(CryptoJS.enc.Utf8);
     } catch (e) {
         data.alert = {
-            message: `Erro! ${e}`,
+            message: `Erro, possivelmente chave informada é inválida! ${e}`,
             class: 'danger'
         }
         appStore.loadingToggle();
@@ -105,7 +116,7 @@ async function decode() {
         data.result = str;
     } else {
         data.alert = {
-            message: `Erro! Erro, possivelmente chave informada é inválida!`,
+            message: `Erro, possivelmente chave informada é inválida!`,
             class: 'danger'
         }
         appStore.loadingToggle();
@@ -113,7 +124,6 @@ async function decode() {
     }
 
     appStore.loadingToggle();
-    location.href = '#msgEnc';
 }
 
 function clear() {

@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="card text-center mb-3">
-                        <div class="modal-body">
+                        <div class="card-body">
                             <p class="card-text overflow-auto text-break font-monospace mb-3"
                                 style="max-height: 200px;">
                                 {{ data.secretMessage }}
