@@ -87,7 +87,7 @@
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <button @click="cancelAction" class="btn btn-secondary">Cancelar</button>
-                    <button class="btn btn-success">Ciente, prosseguir</button>
+                    <button @click="permissionsModalActionConfirm" class="btn btn-success">Ciente, prosseguir</button>
                 </div>
             </div>
         </div>
@@ -174,19 +174,7 @@ async function requestCameraPermission() {
         });
 }
 
-async function decodeTheMessage() {
-    if (!data.inputSecretKey) {
-        return alert('Informe uma chave secreta para prosseguir!');
-    }
-
-    const handleModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#handleModal'));
-    const permissionsModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#permissionsModal'));
-
-    if (!data.requestPermissionsModal) {
-        handleModal.hide();
-        permissionsModal.show();
-    }
-
+async function processAction() {
     await requestNotificationPermission();
     await requestCameraPermission();
 
@@ -246,6 +234,31 @@ async function decodeTheMessage() {
     }
 
     appStore.loadingToggle();
+}
+
+async function decodeTheMessage() {
+    if (!data.inputSecretKey) {
+        return alert('Informe uma chave secreta para prosseguir!');
+    }
+
+    const handleModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#handleModal'));
+    const permissionsModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#permissionsModal'));
+
+    if (data.requestPermissionsModal) {
+        handleModal.hide();
+        permissionsModal.show();
+    } else {
+        processAction();
+    }
+}
+
+function permissionsModalActionConfirm() {
+    const permissionsModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#permissionsModal'));
+    permissionsModal.hide();
+    const handleModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#handleModal'));
+    handleModal.show();
+    data.requestPermissionsModal = false;
+    processAction();
 }
 
 function cancelAction() {
