@@ -10,8 +10,9 @@
                 <div class="modal-body">
                     <Ads />
                     <div v-if="data.alert != null" class="mb-3">
-                        <div :class="'alert alert-' + data.alert.class" role="alert">
+                        <div :class="'alert alert-' + data.alert.class + ' alert-dismissible'" role="alert">
                             {{ data.alert.message }}
+                            <button @click="() => data.alert = null" type="button" class="btn-close"></button>
                         </div>
                     </div>
                     <div class="card text-center mb-3">
@@ -43,7 +44,7 @@
                                 <input type="text" class="form-control" id="inputSecretKey">
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-primary mb-3">Escanear 📷</button>
+                                <button @click="throwError" class="btn btn-primary mb-3">Escanear 📷</button>
                             </div>
                         </div>
                     </div>
@@ -172,5 +173,12 @@ function requestCameraPermission() {
 function copySecretMessage() {
     navigator.clipboard.writeText(data.secretMessage);
     alert('Texto copiado para a área de transferência.');
+}
+
+function throwError() {
+    data.alert = {
+        'class': 'danger',
+        'message': 'Erro inesperado! Tente mais tarde...'
+    }
 }
 </script>
