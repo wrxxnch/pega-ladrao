@@ -1,3 +1,6 @@
+import CryptoJS from 'crypto-js';
+
+
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text);
     alert('Texto copiado para a área de transferência.');
@@ -39,11 +42,23 @@ async function requestCameraPermission(videoElement) {
         });
 }
 
+function decrypt(text, key) {
+    const decrypted = CryptoJS.AES.decrypt(text, key);
+    if (!decrypted) return false;
+    try {
+        let str = decrypted.toString(CryptoJS.enc.Utf8);
+        if (str.length > 0) return str;
+    } catch (e) {
+        return false;
+    }
+}
+
 export {
     copyToClipboard,
     alertMessage,
     delay,
     notificationPermissionIsGranted,
     requestNotificationPermission,
-    requestCameraPermission
+    requestCameraPermission,
+    decrypt
 }

@@ -65,8 +65,7 @@
 import Ads from './Ads.vue';
 import { reactive } from 'vue';
 import { useAppStore } from '../store';
-import * as CryptoJS from 'crypto-js';
-import { alertMessage, copyToClipboard } from '../functions';
+import { alertMessage, copyToClipboard, decrypt } from '../functions';
 
 const data = reactive({
     msgEncoded: '',
@@ -88,33 +87,14 @@ async function decode() {
 
     appStore.loadingToggle();
 
-    const decrypted = CryptoJS.AES.decrypt(data.msgEncoded, data.msgKey);
+    const decrypted = decrypt(data.msgEncoded, data.msgKey);
 
     if (!decrypted) {
-        data.alert = alertMessage('danger', 'Erro, possivelmente chave informada é inválida!');
+        data.alert = alertMessage('danger', 'Chave secreta incorreta ou inválida!');
         appStore.loadingToggle();
         return;
     }
-
-    let str = null;
-
-    try {
-        // console.log(decrypted);
-        str = decrypted.toString(CryptoJS.enc.Utf8);
-    } catch (e) {
-        data.alert = alertMessage('danger', `Erro, possivelmente chave informada é inválida! ${e}`);
-        appStore.loadingToggle();
-        return;
-    }
-
-    if (str.length > 0) {
-        data.result = str;
-    } else {
-        data.alert = alertMessage('danger', 'Erro, possivelmente chave informada é inválida!');
-        appStore.loadingToggle();
-        return;
-    }
-
+    data.result = decrypted;
     appStore.loadingToggle();
 }
 
