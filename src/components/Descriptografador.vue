@@ -44,7 +44,7 @@
                                 </p>
                                 <hr>
                                 <div class="mb-3 text-center d-flex justify-content-between">
-                                    <button :disabled="data.result.length == 0 ? true : false" @click="copy"
+                                    <button :disabled="data.result.length == 0 ? true : false" @click="copyToClipboard"
                                         type="button" class="btn btn-info">
                                         Copiar 📋
                                     </button>
@@ -66,6 +66,7 @@ import Ads from './Ads.vue';
 import { reactive } from 'vue';
 import { useAppStore } from '../store';
 import * as CryptoJS from 'crypto-js';
+import { alert, copyToClipboard } from '../functions';
 
 const data = reactive({
     msgEncoded: '',
@@ -90,10 +91,7 @@ async function decode() {
     const decrypted = CryptoJS.AES.decrypt(data.msgEncoded, data.msgKey);
 
     if (!decrypted) {
-        data.alert = {
-            message: 'Erro, possivelmente chave informada é inválida!',
-            class: 'danger'
-        }
+        data.alert = alert('danger', 'Erro, possivelmente chave informada é inválida!');
         appStore.loadingToggle();
         return;
     }
@@ -104,10 +102,7 @@ async function decode() {
         // console.log(decrypted);
         str = decrypted.toString(CryptoJS.enc.Utf8);
     } catch (e) {
-        data.alert = {
-            message: `Erro, possivelmente chave informada é inválida! ${e}`,
-            class: 'danger'
-        }
+        data.alert = alert('danger', `Erro, possivelmente chave informada é inválida! ${e}`);
         appStore.loadingToggle();
         return;
     }
@@ -115,10 +110,7 @@ async function decode() {
     if (str.length > 0) {
         data.result = str;
     } else {
-        data.alert = {
-            message: `Erro, possivelmente chave informada é inválida!`,
-            class: 'danger'
-        }
+        data.alert = alert('danger', 'Erro, possivelmente chave informada é inválida!');
         appStore.loadingToggle();
         return;
     }
@@ -131,10 +123,5 @@ function clear() {
     data.msgKey = '';
     data.result = '';
     data.alert = null;
-}
-
-function copy() {
-    navigator.clipboard.writeText(data.result);
-    alert('Texto copiado para a área de transferência.');
 }
 </script>

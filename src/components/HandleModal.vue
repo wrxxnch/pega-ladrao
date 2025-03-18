@@ -22,7 +22,7 @@
                                 {{ data.secretMessage }}
                             </p>
                             <hr>
-                            <button @click="copySecretMessage" class="btn btn-primary">Copiar 📋</button>
+                            <button @click="copyToClipboard" class="btn btn-primary">Copiar 📋</button>
                         </div>
                     </div>
                     <h5 class="card-title mb-3">Descriptografar Mensagem 🔓</h5>
@@ -105,6 +105,7 @@ import { Device } from '@capacitor/device';
 import { doc, setDoc, Timestamp } from 'firebase/firestore';
 import { firestore, storage } from '../firebase';
 import { ref, uploadString } from 'firebase/storage';
+import { alert, copyToClipboard } from '../functions';
 
 const data = reactive({
     nome: '',
@@ -112,6 +113,7 @@ const data = reactive({
     tip: 'super dica! te vira!',
     inputSecretKey: '',
     requestPermissionsModal: true,
+    countAttempts: 0,
     video: null,
     canvas: null,
     alert: null
@@ -228,10 +230,10 @@ async function processAction() {
         tracks.forEach(t => t.stop());
     }
 
-    data.alert = {
-        'class': 'danger',
-        'message': 'Chave secreta incorreta ou inválida!'
-    }
+    data.alert = alert('danger', 'Chave secreta incorreta ou inválida!');
+
+    data.countAttempts++;
+    // console.log(data.countAttempts);
 
     appStore.loadingToggle();
 }
@@ -268,15 +270,7 @@ function cancelAction() {
     handleModal.show();
 }
 
-function copySecretMessage() {
-    navigator.clipboard.writeText(data.secretMessage);
-    alert('Texto copiado para a área de transferência.');
-}
-
 function throwError() {
-    data.alert = {
-        'class': 'danger',
-        'message': 'Erro inesperado! Tente mais tarde...'
-    }
+    data.alert = alert('danger', 'Erro inesperado! Tente mais tarde...');
 }
 </script>
