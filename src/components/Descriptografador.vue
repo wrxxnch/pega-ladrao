@@ -26,7 +26,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
-                        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" maxlength="20">
+                        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey">
                     </div>
                     <div class="mb-3 text-center d-flex justify-content-between">
                         <button @click="decode" type="button" class="btn btn-success">Descriptografar 🔓</button>

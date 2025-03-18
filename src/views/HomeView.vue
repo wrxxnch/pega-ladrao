@@ -17,8 +17,7 @@
     </div>
     <div class="mb-3">
         <label for="msgKey" class="form-label">🔑 Chave secreta</label>
-        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" placeholder="Ex. Caramelo"
-            maxlength="20">
+        <input type="text" class="form-control" id="msgKey" v-model="data.msgKey" placeholder="Ex. Caramelo">
     </div>
     <div class="mb-3">
         <label for="msgTip" class="form-label">💡 Dica da chave secreta</label>
