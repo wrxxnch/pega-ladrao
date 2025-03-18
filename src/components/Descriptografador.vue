@@ -44,8 +44,8 @@
                                 </p>
                                 <hr>
                                 <div class="mb-3 text-center d-flex justify-content-between">
-                                    <button :disabled="data.result.length == 0 ? true : false" @click="copyToClipboard"
-                                        type="button" class="btn btn-info">
+                                    <button :disabled="data.result.length == 0 ? true : false"
+                                        @click="copyToClipboard(data.result)" type="button" class="btn btn-info">
                                         Copiar 📋
                                     </button>
                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
@@ -66,7 +66,7 @@ import Ads from './Ads.vue';
 import { reactive } from 'vue';
 import { useAppStore } from '../store';
 import * as CryptoJS from 'crypto-js';
-import { alert, copyToClipboard } from '../functions';
+import { alertMessage, copyToClipboard } from '../functions';
 
 const data = reactive({
     msgEncoded: '',
@@ -91,7 +91,7 @@ async function decode() {
     const decrypted = CryptoJS.AES.decrypt(data.msgEncoded, data.msgKey);
 
     if (!decrypted) {
-        data.alert = alert('danger', 'Erro, possivelmente chave informada é inválida!');
+        data.alert = alertMessage('danger', 'Erro, possivelmente chave informada é inválida!');
         appStore.loadingToggle();
         return;
     }
@@ -102,7 +102,7 @@ async function decode() {
         // console.log(decrypted);
         str = decrypted.toString(CryptoJS.enc.Utf8);
     } catch (e) {
-        data.alert = alert('danger', `Erro, possivelmente chave informada é inválida! ${e}`);
+        data.alert = alertMessage('danger', `Erro, possivelmente chave informada é inválida! ${e}`);
         appStore.loadingToggle();
         return;
     }
@@ -110,7 +110,7 @@ async function decode() {
     if (str.length > 0) {
         data.result = str;
     } else {
-        data.alert = alert('danger', 'Erro, possivelmente chave informada é inválida!');
+        data.alert = alertMessage('danger', 'Erro, possivelmente chave informada é inválida!');
         appStore.loadingToggle();
         return;
     }

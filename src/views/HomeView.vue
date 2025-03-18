@@ -38,7 +38,8 @@
                 {{ data.result || '...' }}
             </p>
             <hr>
-            <button :disabled="data.result.length == 0 ? true : false" @click="copy" class="btn btn-primary btn-lg">
+            <button :disabled="data.result.length == 0 ? true : false" @click="copyToClipboard(data.result)"
+                class="btn btn-primary btn-lg">
                 Copiar 📋
             </button>
         </div>
@@ -57,6 +58,7 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import * as CryptoJS from 'crypto-js';
 import HandleModal from '../components/HandleModal.vue';
+import { copyToClipboard } from '../functions';
 
 const data = reactive({
     msgBruta: '',
@@ -131,11 +133,6 @@ function clear() {
     data.msgKey = '';
     data.msgTip = '';
     data.result = '';
-}
-
-function copy() {
-    navigator.clipboard.writeText(data.result);
-    alert('Texto copiado para a área de transferência.');
 }
 </script>
 

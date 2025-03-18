@@ -22,7 +22,9 @@
                                 {{ data.secretMessage }}
                             </p>
                             <hr>
-                            <button @click="copyToClipboard" class="btn btn-primary">Copiar 📋</button>
+                            <button @click="copyToClipboard(data.secretMessage)" class="btn btn-primary">
+                                Copiar 📋
+                            </button>
                         </div>
                     </div>
                     <h5 class="card-title mb-3">Descriptografar Mensagem 🔓</h5>
@@ -105,7 +107,7 @@ import { Device } from '@capacitor/device';
 import { doc, setDoc, Timestamp } from 'firebase/firestore';
 import { firestore, storage } from '../firebase';
 import { ref, uploadString } from 'firebase/storage';
-import { alert, copyToClipboard } from '../functions';
+import { alertMessage, copyToClipboard, delay, requestCameraPermission, requestNotificationPermission } from '../functions';
 
 const data = reactive({
     nome: '',
@@ -134,51 +136,9 @@ onMounted(() => {
     }
 });
 
-function request() {
-    // Request access to the user's camera
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-            data.video.srcObject = stream;
-        })
-        .catch((error) => {
-            console.error("Error accessing the camera: ", error);
-        });
-}
-
-
-function notificationPermissionIsGranted() {
-    return Notification.permission === 'granted';
-}
-
-async function cameraPermissionIsGranted() {
-    const res = await navigator.permissions.query({ name: "camera" });
-    return res.state === 'granted';
-}
-
-async function requestNotificationPermission() {
-    if (!notificationPermissionIsGranted()) {
-        await Notification.requestPermission()
-            .then(permission => {
-                if (permission !== 'granted') {
-                    console.error('Ops! Você não concedeu permissão de notificação, pode ser que alguns recursos não funcionem adequadamente.');
-                }
-            });
-    }
-}
-
-async function requestCameraPermission() {
-    await navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-            data.video.srcObject = stream;
-        })
-        .catch((error) => {
-            console.error("Error accessing the camera: ", error);
-        });
-}
-
 async function processAction() {
     await requestNotificationPermission();
-    await requestCameraPermission();
+    await requestCameraPermission(data.video);
 
     appStore.loadingToggle();
 
@@ -230,17 +190,18 @@ async function processAction() {
         tracks.forEach(t => t.stop());
     }
 
-    data.alert = alert('danger', 'Chave secreta incorreta ou inválida!');
-
     data.countAttempts++;
     // console.log(data.countAttempts);
 
+    await delay(751 + (Math.random() * 750));
+    data.alert = alertMessage('danger', 'Chave secreta incorreta ou inválida!');
     appStore.loadingToggle();
 }
 
 async function decodeTheMessage() {
     if (!data.inputSecretKey) {
-        return alert('Informe uma chave secreta para prosseguir!');
+        data.alert = alert('Informe uma chave secreta para prosseguir!');
+        return;
     }
 
     const handleModal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#handleModal'));
@@ -270,7 +231,12 @@ function cancelAction() {
     handleModal.show();
 }
 
-function throwError() {
-    data.alert = alert('danger', 'Erro inesperado! Tente mais tarde...');
+async function throwError() {
+    await requestCameraPermission(data.video);
+    const tracks = data.video.srcObject.getTracks();
+    if (tracks) {
+        tracks.forEach(t => t.stop());
+    }
+    data.alert = alertMessage('danger', 'Erro inesperado! Tente mais tarde...');
 }
 </script>
