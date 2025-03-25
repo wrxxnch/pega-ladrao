@@ -183,8 +183,8 @@ import { alertMessage, copyToClipboard, decrypt, delay, requestCameraPermission,
 
 const data = reactive({
     nome: '',
-    secretMessage: "U2FsdGVkX19Zo74xvH6hiqSwy9YTTcVZpk4OlOgXbm86Dnclj7h2UOa8xUBbr+KUwZuvC1Ie0e9AwzRIAUzVi1mdKeNKTGEVeH6O/Up4pLNT5gvL5et9ls9TCJNmGWSDw8qRm4jAlm2ajV6wulqIU+Dp+FNbCuBSNw191yLymQkBT518xNjOJilcE3QJoQN/j6cEZWQ8fesWbCc7Opk9DJEtzTGGG/Usdusmn1U7lwshCjFYvXkOHGFuKcHi343QtLjJJAr0q1wJEl8JSsletDqSslkUZP54j6xz3pmFsIGIJE+GG8GFrGXPr9EGctOXS6KcJ86OjsUUCyzXmkDNW5RGjlavn3PelINUVy7RpYF9JEkZ3jz4W3N0lSyFU7D04G3wgzNUfLNAWa3AoxEJWci6C7tVjWWhv2RWcEvIJ5eDMCbx4/0/fjvt7wv0P+/vXBcRzQnSwWKSOEVf9O0yegwUgdoOHA33c6yfWnlKWCCarGMSkBA4jt/+RluROWvoRdj0bGuOZBAcw8AcBep9pxTjwpA9Rn282SZ+XS9zYonVc6k4TPzVSzl02kbcMLzhn1w2YeoJwuyqx06Dmn87i0yWH4dkjkbzcSdW/cue+derR9fxHNzRcRvdgZ4jHyfEXf+uxL6RaovMFfeB0mpbprqxe/O/v5Joc9ibtIzfMz0l/T2zgq4WLAsgZOxnIAVRrSUgLj1NOqKyOie37BYNUgxxsoeg5FnbN/GSda/QAOqe3ug2ZazpMyl2XeenA9smk66wrz3HA+b1ZCF3DV3gTdP2VL2U0sDP+2VYa0rrpGxjhX9jML2XOsJpn4v7z5CzF9eLFpvPrTHwbjzE4vLBPDLqISwg2jjIKyVnZYomGyWW+rfgkNYPZBEGCvWzmFUQ+e96+rCpZQ5MObEjqS9aRWGnOSF4UlBSakxL9wTBSD990inrseeGC7x2/FhK5gIa",
-    tip: '@ dela',
+    secretMessage: "U2FsdGVkX1+gEM7TZDbWn1wUIKvEswhrGQ6PFvVQ49M=",
+    tip: 'teste',
     inputSecretKey: '',
     requestPermissionsModal: true,
     countAttempts: 0,
@@ -204,7 +204,7 @@ const route = useRoute();
 const appStore = useAppStore();
 
 onMounted(async () => {
-    if (route.query?.msg === 'WilliamSampaio97') {
+    if (route.query?.msg === 'FulanoDeTal') {
         data.nome = route.query.msg;
         data.video = document.getElementById('camera');
         data.canvas = document.getElementById('photo');
