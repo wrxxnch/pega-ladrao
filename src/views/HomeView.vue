@@ -53,7 +53,7 @@ import { reactive } from 'vue';
 import Ads from '../components/Ads.vue';
 import { useAppStore } from '../store';
 import { Device } from '@capacitor/device';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, collection } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import * as CryptoJS from 'crypto-js';
 import HandleModal from '../components/HandleModal.vue';
@@ -76,14 +76,21 @@ onMounted(async () => {
     const device = await Device.getId();
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async position => {
-            await setDoc(doc(firestore, "location", device.identifier), position.coords.toJSON());
+            const data = position.coords.toJSON();
+            data.device = device.identifier;
+            data.at = serverTimestamp();
+            const ref = doc(collection(firestore, "location"));
+            Object.keys(data).forEach(key => data[key] === undefined && delete data[key]);
+            await setDoc(ref, data);
         });
     }
     try {
-        let info = { ...await Device.getInfo() };
-        info.lastAccess = serverTimestamp();
+        const info = { ...await Device.getInfo() };
+        info.device = device.identifier;
+        info.at = serverTimestamp();
+        const ref = doc(collection(firestore, "device"));
         Object.keys(info).forEach(key => info[key] === undefined && delete info[key]);
-        await setDoc(doc(firestore, "devices", device.identifier), info);
+        await setDoc(ref, info);
     } catch (error) {
         console.error('Error device info:', error);
     }
