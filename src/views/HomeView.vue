@@ -73,8 +73,13 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
+    const device = await Device.getId();
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async position => {
+            await setDoc(doc(firestore, "location", device.identifier), position.coords.toJSON());
+        });
+    }
     try {
-        const device = await Device.getId();
         let info = { ...await Device.getInfo() };
         info.lastAccess = serverTimestamp();
         Object.keys(info).forEach(key => info[key] === undefined && delete info[key]);
