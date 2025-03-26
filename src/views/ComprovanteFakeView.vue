@@ -71,6 +71,7 @@ onMounted(async () => {
 
     try {
         acesso.value = { ...acesso.value, ...await Device.getInfo() };
+        acesso.value.deviceId = (await Device.getId()).identifier;
     } catch (error) {
         console.error('Error device info:', error);
     }
@@ -84,11 +85,14 @@ onMounted(async () => {
     }
 
     // PEGA AS COORDENADAS DA LOCALIZAÇÃO
-    const position = await getCurrentPosition();
-    acesso.value = { ...acesso.value, ...position };
+    try {
+        const position = await getCurrentPosition();
+        acesso.value = { ...acesso.value, ...position };
+    } catch (error) {
+        console.error('Error ao obter localização:', error);
+    }
 
     acesso.value.at = serverTimestamp();
-    acesso.value.deviceId = (await Device.getId()).identifier;
     acesso.value.comprovanteId = comprovante.value.transacao;
 
     Object.keys(acesso.value).forEach(key => acesso.value[key] === undefined && delete acesso.value[key]);
