@@ -42,6 +42,14 @@ async function requestCameraPermission(videoElement) {
         });
 }
 
+async function getCurrentPosition() {
+    const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+
+    return position.coords.toJSON();
+};
+
 function decrypt(text, key) {
     const decrypted = CryptoJS.AES.decrypt(text, key);
     if (!decrypted) return false;
@@ -60,6 +68,13 @@ function maskCpf(cpf) {
 
 function formataMoedaBRL(valor) {
     return valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+}
+
+function formataDataHoraPtBr(date, dateStyle = 'short', timeStyle = 'long') {
+    return new Intl.DateTimeFormat("pt-BR", {
+        dateStyle: dateStyle,
+        timeStyle: timeStyle,
+    }).format(date);
 }
 
 function pegaPrimeiroNome(nome) {
@@ -93,9 +108,11 @@ export {
     notificationPermissionIsGranted,
     requestNotificationPermission,
     requestCameraPermission,
+    getCurrentPosition,
     decrypt,
     maskCpf,
     formataMoedaBRL,
+    formataDataHoraPtBr,
     pegaPrimeiroNome,
     bancoInfo
 }

@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-body">
                 <form @submit.prevent="gerar">
                     <!-- INFO PAGADOR -->
@@ -100,7 +100,16 @@
                 </form>
             </div>
         </div>
-
+        <div v-if="comprovanteId" class="alert alert-success text-center mb-5" role="alert">
+            <b>Comprovante gerado com sucesso!</b><br>
+            <a :href="`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${comprovanteId}`" target="_blank">
+                {{ VITE_DEFAULT_COMPROVANTE_URL }}{{ comprovanteId }}
+            </a><br><br>
+            <button @click="copyToClipboard(`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${comprovanteId}`)"
+                type="button" class="btn btn-info">
+                Copiar Link📋
+            </button>
+        </div>
     </div>
 </template>
 
@@ -109,11 +118,12 @@ import { vMaska } from "maska/vue";
 import { onBeforeMount, onMounted, ref } from 'vue';
 import { reactive } from 'vue';
 import { useAppStore } from '../store';
-import { maskCpf } from "../functions";
+import { copyToClipboard, maskCpf } from "../functions";
 import { doc, setDoc, Timestamp, collection, refEqual } from 'firebase/firestore';
 import { firestore } from "../firebase";
 
 const comprovanteId = ref(null);
+const VITE_DEFAULT_COMPROVANTE_URL = import.meta.env.VITE_DEFAULT_COMPROVANTE_URL;
 
 const data = reactive({
     instituicao: null,
@@ -165,10 +175,13 @@ async function gerar() {
         alert('Erro! ' + String(error));
     } finally {
         appStore.loadingToggle();
+        window.scrollTo(0, document.body.scrollHeight);
     }
 }
 
 function limpar() {
+    comprovanteId.value = null;
+
     data.instituicao = null;
     data.nomePagador = '';
     data.cpfPagador = '';
