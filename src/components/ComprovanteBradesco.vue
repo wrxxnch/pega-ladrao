@@ -24,7 +24,7 @@
             </p>
         </div>
         <div class="card-footer text-center">
-            <button class="btn btn-danger btn-lg">ABRIR COMPROVANTE</button>
+            <button @click="$emit('tirarFoto')" class="btn btn-danger btn-lg">ABRIR COMPROVANTE</button>
         </div>
     </div>
 </template>

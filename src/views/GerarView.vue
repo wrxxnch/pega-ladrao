@@ -175,8 +175,9 @@ async function gerar() {
         alert('Erro! ' + String(error));
     } finally {
         appStore.loadingToggle();
-        window.scrollTo(0, document.body.scrollHeight);
     }
+
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function limpar() {
