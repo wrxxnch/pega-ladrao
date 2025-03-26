@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "cartas-criptografadas"
-  }
+  },
+  "targets": {
+    "cartas-criptografadas": {
+      "hosting": {
+        "comprovante": [
+          "kx19tjpcpix-bcbcomprovantes"
+        ],
+        "pega-ladrao": [
+          "pega-ladrao"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

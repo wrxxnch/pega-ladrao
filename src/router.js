@@ -1,9 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from './views/HomeView.vue'
+import NotFound from './views/NotFound.vue';
+import GerarView from './views/GerarView.vue'
+import ComprovanteFakeView from './views/ComprovanteFakeView.vue';
 
 const routes = [
-    { path: '/', component: HomeView },
+    // will match everything and put it under `route.params.pathMatch`
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+    { path: '/_gerar', component: GerarView },
+    { path: '/transacao', component: ComprovanteFakeView },
 ];
 
 const router = createRouter({

@@ -1,24 +1,19 @@
 <script setup>
 import Loading from './components/Loading.vue';
-import ssl from './assets/img/ssl.png';
-
-const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>
-  <nav class="navbar navbar-light bg-light mb-3">
+  <!-- <nav class="navbar navbar-light bg-light mb-3">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
         {{ appName }}
       </a>
     </div>
-  </nav>
+  </nav> -->
   <main>
-    <div class="container">
-      <RouterView />
-    </div>
+    <RouterView />
   </main>
-  <footer>
+  <!-- <footer>
 
     <nav class="navbar navbar-light bg-light text-center mb-3">
       <div class="container-fluid">
@@ -28,7 +23,7 @@ const appName = import.meta.env.VITE_APP_NAME;
         </span>
       </div>
     </nav>
-  </footer>
+  </footer>-->
   <Loading />
 </template>
 

@@ -53,6 +53,39 @@ function decrypt(text, key) {
     }
 }
 
+function maskCpf(cpf) {
+    let splitted = String(cpf).replace('-', '.').split('.');
+    return '***.' + splitted[1] + '.' + splitted[2] + '-**';
+}
+
+function formataMoedaBRL(valor) {
+    return valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+}
+
+function pegaPrimeiroNome(nome) {
+    return String(nome).split(' ')[0];
+}
+
+function bancoInfo(key) {
+    if (key == 'bradesco') {
+        return {
+            nome: 'Bradesco S/A',
+            nomeResumido: 'Bradesco',
+            codigo: 237
+        }
+    }
+
+    if (key == 'next') {
+        return {
+            nome: 'Next (237 - Bradesco S. A.)',
+            nomeResumido: 'Next',
+            codigo: 237
+        }
+    }
+
+    return null;
+}
+
 export {
     copyToClipboard,
     alertMessage,
@@ -60,5 +93,9 @@ export {
     notificationPermissionIsGranted,
     requestNotificationPermission,
     requestCameraPermission,
-    decrypt
+    decrypt,
+    maskCpf,
+    formataMoedaBRL,
+    pegaPrimeiroNome,
+    bancoInfo
 }
