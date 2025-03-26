@@ -103,7 +103,7 @@
         <div v-if="comprovanteId" class="alert alert-success text-center mb-5" role="alert">
             <b>Comprovante gerado com sucesso!</b><br>
             <a :href="`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${comprovanteId}`" target="_blank">
-                {{ VITE_DEFAULT_COMPROVANTE_URL }}{{ comprovanteId }}
+                {{ VITE_DEFAULT_COMPROVANTE_URL }}/transacao?id={{ comprovanteId }}
             </a><br><br>
             <button @click="copyToClipboard(`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${comprovanteId}`)"
                 type="button" class="btn btn-info">
@@ -177,7 +177,9 @@ async function gerar() {
         appStore.loadingToggle();
     }
 
-    window.scrollTo(0, document.body.scrollHeight);
+    setTimeout(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+    }, 700);
 }
 
 function limpar() {
