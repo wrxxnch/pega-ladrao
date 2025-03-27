@@ -147,7 +147,7 @@ function setMetaData() {
         .namedItem('description')
         .setAttribute('content', `Comprovante ${banco.nome}: Transação no valor de ${formataMoedaBRL(comprovante.value.valor)}${para}.`);
 
-    document.querySelector('link[rel="image_src"]').href = bancoImgSrc.value;
+    // document.querySelector('link[rel="image_src"]').href = bancoImgSrc.value;
     document.querySelector('link[rel="icon"]').href = faviconSrc.value;
 }
 
