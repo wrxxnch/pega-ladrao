@@ -38,8 +38,10 @@ onMounted(async () => {
     const docRef = doc(firestore, 'comprovantes', route.query.id);
     const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) {
+    if (!docSnap.exists() || docSnap.data().expiracao.toDate() < (new Date)) {
         router.push({ path: '/' });
+        appStore.loadingToggle();
+        return;
     }
 
     comprovante.value = docSnap.data();

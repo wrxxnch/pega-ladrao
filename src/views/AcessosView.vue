@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted, reactive } from 'vue';
+import { computed, onBeforeMount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { firestore, storage } from '../firebase';
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
@@ -56,10 +56,11 @@ onMounted(async () => {
         let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         let s = Math.floor((distance % (1000 * 60)) / 1000);
 
-        data.expiracaoContagem = h + "h " + m + "m " + s + "s";
+        data.expiracaoContagem = `Comprovante Expira em: ${h}h ${m}m ${s}s`;
 
         if (distance < 0) {
             clearInterval(x);
+            data.expiracaoContagem = 'Comprovante Expirado!';
         }
     }, 1000)
 
@@ -107,6 +108,10 @@ async function getFotos(comprovanteId) {
             data.alert = alertMessage('danger', `Erro: ${error.message}`);
         });
 }
+
+const linkExpirado = computed(() => {
+    return data.comprovante?.expiracao.toDate() < (new Date);
+});
 </script>
 
 <template>
@@ -125,7 +130,7 @@ async function getFotos(comprovanteId) {
                 aria-label="Close"></button>
         </div>
 
-        <div class="alert alert-success text-center" role="alert">
+        <div v-if="!linkExpirado" class="alert alert-success text-center" role="alert">
             <h4 class="alert-heading" style="font-weight: bold;">
                 🎉 Comprovante gerado com sucesso! 🎉
             </h4>
@@ -147,7 +152,7 @@ async function getFotos(comprovanteId) {
         </div>
 
         <h2>Acessos</h2>
-        <h3 style="color: red;">Comprovante Expira em: {{ data.expiracaoContagem }}</h3>
+        <h3 style="color: red;">{{ data.expiracaoContagem }}</h3>
         <hr>
         <div class="accordion" id="accordionFlush">
             <div v-for="(acesso, index) in data.acessos" class="accordion-item">
