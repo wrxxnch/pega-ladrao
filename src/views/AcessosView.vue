@@ -43,9 +43,17 @@ onMounted(async () => {
     }
 
     await getFotos(route.query.id);
-    queryAcessos(route.query.id);
+    await queryAcessos(route.query.id);
 
     appStore.loadingToggle();
+
+    // POLLING A CADA 30 SEGUNDOS
+    window.setInterval(async () => {
+        appStore.loadingToggle();
+        await getFotos(route.query.id);
+        await queryAcessos(route.query.id);
+        appStore.loadingToggle();
+    }, 30 * 1000);
 });
 
 async function queryAcessos(comprovanteId) {
