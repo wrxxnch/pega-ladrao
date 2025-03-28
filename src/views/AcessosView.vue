@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeMount, onMounted, reactive } from 'vue';
+import { onBeforeMount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { firestore, storage } from '../firebase';
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
@@ -19,7 +19,8 @@ const data = reactive({
     comprovante: null,
     acessos: [],
     fotos: [],
-    expiracaoContagem: ''
+    expiracaoContagem: '',
+    expirado: false
 });
 
 onBeforeMount(() => {
@@ -60,6 +61,7 @@ onMounted(async () => {
 
         if (distance < 0) {
             clearInterval(x);
+            data.expirado = true;
             data.expiracaoContagem = 'Comprovante Expirado!';
         }
     }, 1000)
@@ -108,10 +110,6 @@ async function getFotos(comprovanteId) {
             data.alert = alertMessage('danger', `Erro: ${error.message}`);
         });
 }
-
-const linkExpirado = computed(() => {
-    return data.comprovante?.expiracao.toDate() < (new Date);
-});
 </script>
 
 <template>
@@ -130,7 +128,7 @@ const linkExpirado = computed(() => {
                 aria-label="Close"></button>
         </div>
 
-        <div v-if="!linkExpirado" class="alert alert-success text-center" role="alert">
+        <div v-if="!data.expirado" class="alert alert-success text-center" role="alert">
             <h4 class="alert-heading" style="font-weight: bold;">
                 🎉 Comprovante gerado com sucesso! 🎉
             </h4>
