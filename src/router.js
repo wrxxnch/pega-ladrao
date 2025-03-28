@@ -6,7 +6,6 @@ import ComprovanteFakeView from './views/ComprovanteFakeView.vue';
 import AcessosView from './views/AcessosView.vue';
 
 const routes = [
-    // will match everything and put it under `route.params.pathMatch`
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
     { path: '/_gerar', name: 'gerar', component: GerarView },
     { path: '/transacao', name: 'transacao', component: ComprovanteFakeView },

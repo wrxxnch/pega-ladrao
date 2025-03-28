@@ -180,7 +180,7 @@ async function getFotos(comprovanteId) {
                         </p>
                         <h5>Localização</h5>
                         <hr>
-                        <p>
+                        <p v-if="acesso.latitude && acesso.longitude">
                             <b>Precisão: </b> {{ acesso.accuracy }} <br>
                             <b>Latitude: </b> {{ acesso.latitude }} <br>
                             <b>Longitude: </b> {{ acesso.longitude }} <br><br>
@@ -188,6 +188,9 @@ async function getFotos(comprovanteId) {
                                 :src="`https://maps.google.com/maps?q=${acesso.latitude},${acesso.longitude}&z=15&output=embed`"
                                 frameborder="1" style="width: 100%; height: 300px;"></iframe>
                         </p>
+                        <div v-else class="alert alert-danger text-center" role="alert">
+                            Permissão não concedida!
+                        </div>
                         <h5 v-if="data.fotos[acesso.id] !== undefined" class="text-center">Fotos</h5>
                         <div v-if="data.fotos[acesso.id] !== undefined" id="carouselFotos" class="carousel slide"
                             data-bs-ride="carousel">
