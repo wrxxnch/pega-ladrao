@@ -4,12 +4,14 @@
         <h1>Gerar Comprovante</h1>
         <hr>
         <div class="alert alert-warning" role="alert">
-            <b>Atenção!...</b>
+            <b>Atenção! Não me responsabilizo por mau uso deste software.</b>
         </div>
         <div class="card mb-3">
             <div class="card-body card-text">
-                ✅ Por meio deste aplicativo você pode criar suas próprias mensagens criptografadas e envia-las para seus
-                amigos ou guardar de forma segura. Abaixo você pode criar uma mensagem super rápido! 🚀
+                Se você chegou até aqui, provavelmente é porque você é vítima de algum tipo de tentativa de fraude que,
+                por meio do seu contato, está tentando extorquir dinheiro de você de alguma forma. Gere recibos falsos
+                do Pix e envie para eles. Se eles acessarem o link (e concederem permissões), você poderá acessar
+                diversas informações sobre o dispositivo deles, IP, localização e até fotos! 🚀
             </div>
         </div>
 
