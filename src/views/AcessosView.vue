@@ -1,19 +1,22 @@
 <script setup>
-import { onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { onBeforeMount, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { firestore, storage } from '../firebase';
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { useAppStore } from '../store';
-import { alertMessage, formataDataHoraPtBr } from '../functions';
-import { getDownloadURL, listAll, ref as refStorage } from 'firebase/storage';
+import { alertMessage, copyToClipboard, formataDataHoraPtBr } from '../functions';
+import { getDownloadURL, listAll, ref } from 'firebase/storage';
 
 const route = useRoute();
 const router = useRouter();
+
+const VITE_DEFAULT_COMPROVANTE_URL = import.meta.env.VITE_DEFAULT_COMPROVANTE_URL;
 
 const appStore = useAppStore();
 
 const data = reactive({
     alert: null,
+    comprovante: null,
     acessos: [],
     fotos: [],
 });
@@ -34,6 +37,9 @@ onMounted(async () => {
         data.alert = alertMessage('danger', 'Comprovante não existe!');
         appStore.loadingToggle();
         return;
+    } else {
+        data.comprovante = docSnap.data();
+        data.comprovante.id = docSnap.id;
     }
 
     await getFotos(route.query.id);
@@ -55,7 +61,7 @@ async function queryAcessos(comprovanteId) {
 
 async function getFotos(comprovanteId) {
     data.fotos = [];
-    const listRef = refStorage(storage, `capturas/${comprovanteId}`);
+    const listRef = ref(storage, `capturas/${comprovanteId}`);
     await listAll(listRef)
         .then(acessos => {
             acessos.prefixes.forEach((acessosRef) => {
@@ -78,13 +84,45 @@ async function getFotos(comprovanteId) {
 </script>
 
 <template>
+    <nav class="navbar mb-3" style="background-color: lightgray;">
+        <div class="container-fluid">
+            <span class="navbar-brand">Pega Ladrão</span>
+            <RouterLink :to="{ name: 'gerar' }" class="btn btn-danger">Gerar Novo Comprovante</RouterLink>
+        </div>
+    </nav>
+
     <div class="container">
 
-        <div v-if="data.alert" :class="'alert alert-' + data.alert.class" role="alert">
+        <div v-if="data.alert" :class="`alert alert-${data.alert.class} alert-dismissible fade show mb-3`" role="alert">
             {{ data.alert.message }}
+            <button @click="data.alert = null" type="button" class="btn-close" data-bs-dismiss="alert"
+                aria-label="Close"></button>
         </div>
 
-        <div class="accordion accordion-flush" id="accordionFlush">
+        <div class="alert alert-success text-center" role="alert">
+            <h4 class="alert-heading" style="font-weight: bold;">
+                🎉 Comprovante gerado com sucesso! 🎉
+            </h4>
+            <p><b>ID: {{ data.comprovante?.id }}</b></p>
+            <p>
+                Agora basta copiar o link do comprovante fake e enviar para o
+                <span style="text-decoration: line-through">meliante</span>
+                cidadão de bem e aguardar ele acessar. Todos os acessos registrados (Informações, localização e fotos)
+                serão listados logo abaixo na seção de <i>Acessos</i>.
+            </p>
+            <hr>
+            <p class="mb-0">
+                {{ VITE_DEFAULT_COMPROVANTE_URL }}/transacao?id={{ data.comprovante?.id }}<br><br>
+                <button @click="copyToClipboard(`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${data.comprovante.id}`)"
+                    type="button" class="btn btn-info">
+                    Copiar Link 📋
+                </button>
+            </p>
+        </div>
+
+        <h2>Acessos</h2>
+        <hr>
+        <div class="accordion" id="accordionFlush">
             <div v-for="(acesso, index) in data.acessos" class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"

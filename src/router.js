@@ -8,9 +8,9 @@ import AcessosView from './views/AcessosView.vue';
 const routes = [
     // will match everything and put it under `route.params.pathMatch`
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
-    { path: '/_gerar', component: GerarView },
-    { path: '/transacao', component: ComprovanteFakeView },
-    { path: '/acessos', component: AcessosView },
+    { path: '/_gerar', name: 'gerar', component: GerarView },
+    { path: '/transacao', name: 'transacao', component: ComprovanteFakeView },
+    { path: '/acessos', name: 'acessos', component: AcessosView },
 ];
 
 const router = createRouter({
