@@ -19,6 +19,7 @@ const data = reactive({
     comprovante: null,
     acessos: [],
     fotos: [],
+    expiracaoContagem: ''
 });
 
 onBeforeMount(() => {
@@ -44,6 +45,23 @@ onMounted(async () => {
 
     await getFotos(route.query.id);
     await queryAcessos(route.query.id);
+
+    const expiracao = data.comprovante.expiracao.toDate().getTime();
+    let x = setInterval(() => {
+        const now = new Date().getTime();
+        let distance = expiracao - now;
+
+        // let d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        data.expiracaoContagem = h + "h " + m + "m " + s + "s";
+
+        if (distance < 0) {
+            clearInterval(x);
+        }
+    }, 1000)
 
     appStore.loadingToggle();
 
@@ -129,6 +147,7 @@ async function getFotos(comprovanteId) {
         </div>
 
         <h2>Acessos</h2>
+        <h3 style="color: red;">Comprovante Expira em: {{ data.expiracaoContagem }}</h3>
         <hr>
         <div class="accordion" id="accordionFlush">
             <div v-for="(acesso, index) in data.acessos" class="accordion-item">
