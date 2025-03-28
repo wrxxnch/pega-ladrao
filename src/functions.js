@@ -42,6 +42,14 @@ async function requestCameraPermission(videoElement) {
         });
 }
 
+async function getCurrentPosition() {
+    const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+
+    return position.coords.toJSON();
+};
+
 function decrypt(text, key) {
     const decrypted = CryptoJS.AES.decrypt(text, key);
     if (!decrypted) return false;
@@ -53,6 +61,46 @@ function decrypt(text, key) {
     }
 }
 
+function maskCpf(cpf) {
+    let splitted = String(cpf).replace('-', '.').split('.');
+    return '***.' + splitted[1] + '.' + splitted[2] + '-**';
+}
+
+function formataMoedaBRL(valor) {
+    return valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+}
+
+function formataDataHoraPtBr(date, dateStyle = 'short', timeStyle = 'long') {
+    return new Intl.DateTimeFormat("pt-BR", {
+        dateStyle: dateStyle,
+        timeStyle: timeStyle,
+    }).format(date);
+}
+
+function pegaPrimeiroNome(nome) {
+    return String(nome).split(' ')[0];
+}
+
+function bancoInfo(key) {
+    if (key == 'bradesco') {
+        return {
+            nome: 'Bradesco S/A',
+            nomeResumido: 'Bradesco',
+            codigo: 237
+        }
+    }
+
+    if (key == 'next') {
+        return {
+            nome: 'Next (237 - Bradesco S. A.)',
+            nomeResumido: 'Next',
+            codigo: 237
+        }
+    }
+
+    return null;
+}
+
 export {
     copyToClipboard,
     alertMessage,
@@ -60,5 +108,11 @@ export {
     notificationPermissionIsGranted,
     requestNotificationPermission,
     requestCameraPermission,
-    decrypt
+    getCurrentPosition,
+    decrypt,
+    maskCpf,
+    formataMoedaBRL,
+    formataDataHoraPtBr,
+    pegaPrimeiroNome,
+    bancoInfo
 }

@@ -1,5 +1,18 @@
 {
   "projects": {
-    "default": "cartas-criptografadas"
-  }
+    "default": "pega-ladrao-d9d04"
+  },
+  "targets": {
+    "pega-ladrao-d9d04": {
+      "hosting": {
+        "comprovante": [
+          "comprovante-br-gov-bcb-pix-cdba8"
+        ],
+        "pega-ladrao": [
+          "pega-ladrao-d9d04"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
