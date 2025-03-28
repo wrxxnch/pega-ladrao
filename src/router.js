@@ -1,9 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from './views/HomeView.vue'
+import NotFound from './views/NotFound.vue';
+import GerarView from './views/GerarView.vue'
+import ComprovanteFakeView from './views/ComprovanteFakeView.vue';
+import AcessosView from './views/AcessosView.vue';
 
 const routes = [
-    { path: '/', component: HomeView },
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+    { path: '/_gerar', name: 'gerar', component: GerarView },
+    { path: '/transacao', name: 'transacao', component: ComprovanteFakeView },
+    { path: '/acessos', name: 'acessos', component: AcessosView },
 ];
 
 const router = createRouter({
