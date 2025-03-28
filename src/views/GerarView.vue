@@ -158,9 +158,8 @@ async function gerar() {
         formData.dataHora = Timestamp.fromDate(new Date());
     }
 
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + formData.expiracao);
-    formData.expiracao = Timestamp.fromDate(now);
+    const exp = new Date(Date.now() + (formData.expiracao * 60 * 1000));
+    formData.expiracao = Timestamp.fromDate(exp);
 
     formData.nomePagador = formData.nomePagador.toUpperCase().replace(/[^A-Z^' ']+/g, "");
 
