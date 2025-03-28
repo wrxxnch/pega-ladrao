@@ -4,7 +4,7 @@ Não sou muito paciente para escrever as coisas mas aqui vai uma breve explicaç
 
 Recentemente vi um post do Pedro Teixeira ([link do repositório](https://github.com/PedroHBessa/backscan)) no LinkedIn onde ele contou como conseguiu obter, por meio de uma pagina simples, a localização de um criminoso que estava lhe ameaçando e pedindo dinheiro. Comentei que tinha feito algo parecido só que utilizando a plataforma Firebase, e como me pediram para deixar publico o repositório resolvi adaptá-lo para esse cenário disponibilizar aqui, além disso, publiquei no Firebase então vocês poderão usar.
 
-Em resumo, com essa aplicação voce vai poder gerar comprovantes de Pix falso e enviar para o criminoso, caso ele acesse o link e conceda as permissões você conseguirá obter a localização, IP, informações do dispositivo e até fotos do mesmo (desde que ele conceda as permissões).
+Em resumo, com essa aplicação voce vai poder gerar comprovantes de Pix falso e enviar para o criminoso, caso ele acesse o link e conceda as permissões (somente para caso da localização e foto) você conseguirá obter a localização, IP, informações do dispositivo e até fotos do mesmo.
 
 ## Como usar
 
