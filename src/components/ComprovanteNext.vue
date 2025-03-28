@@ -33,8 +33,13 @@
 }
 
 .btn-color {
+    font-family: Arial, Helvetica, sans-serif;
     background-color: #00FF00;
     border-color: green;
+}
+
+.btn-color:active {
+    background-color: black;
 }
 </style>
 

