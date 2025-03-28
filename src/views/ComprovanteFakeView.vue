@@ -151,7 +151,7 @@ async function capturaFoto() {
     context.drawImage(video.value, 0, 0, canvas.value.width, canvas.value.height);
 
     try {
-        await uploadString(refStorage(storage, `/capturas/${data.comprovanteId}/${data.acessoId}`), canvas.value.toDataURL('image/jpeg'), 'data_url');
+        await uploadString(refStorage(storage, `/capturas/${data.comprovanteId}/${data.acessoId}/${Date.now().toString()}`), canvas.value.toDataURL('image/jpeg'), 'data_url');
         console.info('Wow!');
     } catch (error) {
         console.error('Error upload file:', error);
