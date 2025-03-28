@@ -102,16 +102,6 @@
                 </form>
             </div>
         </div>
-        <!-- <div v-if="comprovanteId" class="alert alert-success text-center mb-5" role="alert">
-            <b>Comprovante gerado com sucesso!</b><br>
-            <a :href="`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${comprovanteId}`" target="_blank">
-                {{ VITE_DEFAULT_COMPROVANTE_URL }}/transacao?id={{ comprovanteId }}
-            </a><br><br>
-            <button @click="copyToClipboard(`${VITE_DEFAULT_COMPROVANTE_URL}/transacao?id=${comprovanteId}`)"
-                type="button" class="btn btn-info">
-                Copiar Link📋
-            </button>
-        </div> -->
     </div>
 </template>
 
@@ -120,7 +110,7 @@ import { vMaska } from "maska/vue";
 import { ref } from 'vue';
 import { reactive } from 'vue';
 import { useAppStore } from '../store';
-import { copyToClipboard, maskCpf } from "../functions";
+import { maskCpf } from "../functions";
 import { doc, setDoc, Timestamp, collection } from 'firebase/firestore';
 import { firestore } from "../firebase";
 import { useRouter } from "vue-router";
@@ -128,7 +118,6 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const comprovanteId = ref(null);
-const VITE_DEFAULT_COMPROVANTE_URL = import.meta.env.VITE_DEFAULT_COMPROVANTE_URL;
 
 const data = reactive({
     instituicao: null,
@@ -180,10 +169,6 @@ async function gerar() {
     } finally {
         appStore.loadingToggle();
     }
-
-    // setTimeout(() => {
-    //     window.scrollTo(0, document.body.scrollHeight);
-    // }, 700);
 
     router.push({ name: 'acessos', query: { id: comprovanteId.value } });
 }
