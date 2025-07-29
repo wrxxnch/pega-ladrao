@@ -1,6 +1,6 @@
 <template>
     <div class="card mt-3 mb-3">
-        <img :src="comprovante.bancoImgSrc" class="w-25 card-img-top mx-auto my-3 d-block" alt="Logo do Banco">
+        <img src="https://brandlogos.net/wp-content/uploads/2023/12/banco_inter-logo_brandlogos.net_qybid-300x78.png" class="w-25 card-img-top mx-auto my-3 d-block" alt="Logo do Banco">
         <div class="card-body">
             <h4 class="card-title text-center"><b>Comprovante de transação Pix</b></h4>
             <hr>
