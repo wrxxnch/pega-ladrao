@@ -88,7 +88,7 @@ function bancoInfo(key) {
         return {
             nome: 'Banco Inter S.A.',
             nomeResumido: 'Inter',
-            codigo: 077
+            codigo: '077'
         }
     }
 
