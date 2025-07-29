@@ -1,9 +1,9 @@
 # Pega Ladrão
 
 # Usage
-npm install -g firebase-tools
-npm install
-npm run dev
+<p>npm install -g firebase-tools</p>
+<p>npm install</p>
+<p>npm run dev</p>
 
 
 
