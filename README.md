@@ -1,11 +1,12 @@
 # Pega Ladrão
 
 # Usage
-'''<p>npm install -g firebase-tools</p>
-<p>npm install</p>
-<p>npm run dev</p>'''
 
-
+```bash
+npm install -g firebase-tools
+npm install
+npm run dev
+```
 
 Recentemente vi um post do Pedro Teixeira ([link do repositório](https://github.com/PedroHBessa/backscan)) no LinkedIn onde ele contou como conseguiu obter, por meio de uma pagina simples, a localização de um criminoso que estava lhe ameaçando e pedindo dinheiro. Comentei que tinha feito algo parecido só que utilizando a plataforma Firebase, e como me pediram para deixar publico o repositório resolvi adaptá-lo para esse cenário disponibilizar aqui, além disso, publiquei no Firebase então vocês poderão usar.
 
