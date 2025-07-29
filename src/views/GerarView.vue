@@ -28,6 +28,7 @@
                             <option selected></option>
                             <option value="bradesco">Bradesco</option>
                             <option value="next">Next</option>
+                            <option value="inter">Banco Inter</option>
                         </select>
                     </div>
                     <div class="mb-3">
