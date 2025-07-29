@@ -84,6 +84,14 @@ function bancoInfo(key) {
         }
     }
 
+    if (key == 'inter') {
+        return {
+            nome: 'Banco Inter S.A.',
+            nomeResumido: 'Inter',
+            codigo: 077
+        }
+    }
+
     return null;
 }
 
