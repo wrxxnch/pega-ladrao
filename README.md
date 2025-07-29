@@ -1,6 +1,6 @@
 # Pega Ladrão
 
-#Usage
+# Usage
 npm install -g firebase-tools
 npm install
 npm run dev
