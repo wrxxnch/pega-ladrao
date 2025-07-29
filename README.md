@@ -20,6 +20,7 @@ Como eu disse, disponibilizei online para qualquer pessoa usar. Criei dois domí
 Para gerar um comprovante acesso esse endereço:
 
 [https://pega-ladrao-d9d04.web.app/_gerar](https://pega-ladrao-d9d04.web.app/_gerar)
+no seu caso acesse o ip gerado exemplo : http://localhost:5176/_gerar
 
 <img src="./prints/1.png" style="width:150px;"/>
 <img src="./prints/2.png" style="width:150px;"/>
