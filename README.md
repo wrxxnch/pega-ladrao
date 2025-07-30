@@ -39,8 +39,7 @@ definas as regras de read and write para true:
 ![rulesfirebase](prints/firebaseRules.jpg)
 
 ---
-# firebase deploy
-🚀 Como fazer o deploy
+# 🚀firebase deploy
 Antes de fazer o deploy, gere a build do projeto:
 ```bash
 npm run build
