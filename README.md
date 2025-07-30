@@ -51,6 +51,10 @@ firebase deploy --only hosting:pega-ladrao,hosting:comprovante
 
 ---
 
+# Acessos
+Se você não assinou o Storage do firebase,os resultados apenas vão ser retornados no firestore database
+<img width="925" height="661" alt="image" src="https://github.com/user-attachments/assets/5c1ce424-fab8-496f-8cec-8f17699b65b5" />
+
 
 <img src="./prints/1.png" style="width:150px;"/>
 <img src="./prints/2.png" style="width:150px;"/>
