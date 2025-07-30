@@ -21,7 +21,12 @@ Para gerar um comprovante acesso esse endereço:
 
 [https://pega-ladrao-d9d04.web.app/_gerar](https://pega-ladrao-d9d04.web.app/_gerar)
 <p>no seu caso acesse o ip gerado exemplo : http://localhost:5176/_gerar</p>
-<p>n esqueça de colocar os valores da firebase no .env.example e renomear para .env (ou pode colocar os valores diretamente no firebase.js)</p>
+<p>n esqueça de colocar os valores da firebase no .env.example e renomear para .env (ou pode colocar os valores diretamente no firebase.js) </p>
+<img width="503" height="41" alt="image" src="https://github.com/user-attachments/assets/fc0b70ed-b3fd-4528-9b03-8af35474e78c" />
+<p>Coloque o projectId no seu comprovante no .env,recomendo usar algo como Comprovante no nome do projeto no firebase </p>
+
+
+
 
 # Firebase login
 ```bash
