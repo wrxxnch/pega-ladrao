@@ -38,6 +38,20 @@ firebase login
 definas as regras de read and write para true:
 ![rulesfirebase](prints/firebaseRules.jpg)
 
+---
+# firebase deploy
+🚀 Como fazer o deploy
+Antes de fazer o deploy, gere a build do projeto:
+```bash
+npm run build
+```
+Deploy em ambos os sites:
+```bash
+firebase deploy --only hosting:pega-ladrao,hosting:comprovante
+```
+
+---
+
 
 <img src="./prints/1.png" style="width:150px;"/>
 <img src="./prints/2.png" style="width:150px;"/>
