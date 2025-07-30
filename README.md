@@ -21,7 +21,13 @@ Para gerar um comprovante acesso esse endereço:
 
 [https://pega-ladrao-d9d04.web.app/_gerar](https://pega-ladrao-d9d04.web.app/_gerar)
 <p>no seu caso acesse o ip gerado exemplo : http://localhost:5176/_gerar</p>
-<p>n esqueça de colocar os valores da firebase no .env.example </p>
+<p>n esqueça de colocar os valores da firebase no .env.example e renomear para .env </p>
+# firebase login
+```bash
+npm install firebase
+firebase login
+```
+
 
 <img src="./prints/1.png" style="width:150px;"/>
 <img src="./prints/2.png" style="width:150px;"/>
